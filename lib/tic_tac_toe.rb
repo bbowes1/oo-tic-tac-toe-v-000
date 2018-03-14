@@ -35,27 +35,27 @@ end
   @board[index] = token
 end
   
-  def position_taken?(board, index)
-   board[index] == "X" || board[index] == "O" 
+  def position_taken?(index)
+   @board[index] == "X" || @board[index] == "O" 
 end
  
- def valid_move?(board, index)
-   index.between?(0, 8) && !position_taken?(board, index)
+ def valid_move?(index)
+   index.between?(0, 8) && !position_taken?(index)
     
 end
 
-def turn(board)
+def turn
    puts "Please enter 1-9"
   user_input = gets.strip
   index = input_to_index(user_input)
  
- if valid_move?(board, index) 
-   token = current_player(board)
-  move(board, index, token)
-  display_board(board)
+ if valid_move?(index) 
+   token = current_player
+  move(index, token)
+  display_board
   else 
   puts "That's not a valid move!"
-  turn(board)
+  turn
  end
 end
    
@@ -69,43 +69,42 @@ end
    turn_count % 2 == 0 ? "X" : "O"
  end
  
- def won?(board)
+ def won?
        WIN_COMBINATIONS.detect do |win_combo|
-         postion_1 = board[win_combo[0]]
-         postion_2 = board[win_combo[1]]
-         postion_3 = board[win_combo[2]]
+         postion_1 = @board[win_combo[0]]
+         postion_2 = @board[win_combo[1]]
+         postion_3 = @board[win_combo[2]]
       
        postion_1 == "X" && postion_2 == "X" && postion_3 == "X" ||
        postion_1 == "O" && postion_2 == "O" && postion_3 == "O"
   end
 end
     
-def full?(board)
-      board.all? do |position|
+def full?
+      @board.all? do |position|
       position == "X" || position == "O"
     end
   end
   
-def draw?(board)
-    !won?(board) && full?(board)
+def draw?
+    !won? && full?
 end
 
-def over?(board)
-  won?(board) || draw?(board)
+def over?
+  won? || draw?
 end
 
-
-def winner(board)
-  won?(board) && board[won?(board)[0]]
+def winner
+  won? && @board[won?[0]]
 end
 
-def play(board)
-  until over?(board)
-  turn(board)
+def play
+  until over?
+  turn
 end
  
- if won?(board)
-  puts "Congratulations #{winner(board)}!"
+ if won?
+  puts "Congratulations #{winner}!"
 
  else
   puts "Cat's Game!"
